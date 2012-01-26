@@ -57,6 +57,7 @@ type RichTextTool() =
     static member SetTextToRichText( rtb: RichTextBox, text: string ) = 
         rtb.SelectAll()
         rtb.Selection.Text <- text
+        rtb.Selection.Select(rtb.ContentStart, rtb.ContentStart)
 
     /// Appends the specified text to the content of the given RichTextBox control.
     static member AppendTextToRichText(rtb: RichTextBox, text: string) = 

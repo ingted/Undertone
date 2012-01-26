@@ -94,13 +94,27 @@ type ConsoleControl() as this =
 open Undertone
 open Undertone.Waves
 
-// try other types of wave function, such as WaveFunctions.square
-let myNote = Creation.makeNote Creation.sine 0.25
+let myNote note octave = 
+    let note =
+        // try other types of wave function, such as Creation.sine 
+        // or Creation.square
+        Creation.makeNote Creation.sawtooth 0.2 note octave
+        // apply transformations to you're note to adjust the way it sounds 
+        |> Transformation.flatten 0.8
+        |> Transformation.tapper 1.0 0.3
+        //|> Transformation.addNoise
+    // try adding more silence to the end of the note, or
+    // removing it all together
+    Seq.concat
+        [ note
+          Creation.makeSilence 0.05 ]
 
+// combine several notes to make a cord
 let cord = 
-    Creation.makeCord [ myNote Note.C 4 |> Transformation.scaleHeight 0.5; 
-                        myNote Note.E 4 |> Transformation.scaleHeight 0.5]
+    Creation.makeCord [ myNote Note.C 4 
+                        myNote Note.E 4 ]
 
+// sequences notes together to make a tune
 let tune =
     seq { yield! cord
           yield! myNote Note.C 4 
@@ -121,7 +135,10 @@ let tune =
           yield! myNote Note.G 4 
           yield! myNote Note.E 4 }
 
+// play the tune
 let player = Player.Play(tune, Repeat = true)
+
+// stop the tune, make refinements then play again
 player.Stop()
 "
 

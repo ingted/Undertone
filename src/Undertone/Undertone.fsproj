@@ -53,7 +53,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.fs" />
-    <Compile Include="SampleProvider.fs" />
     <Compile Include="WaveFunctions.fs" />
     <Compile Include="PcmMediaStreamSource.fs" />
     <Compile Include="Player.fs" />

@@ -49,11 +49,12 @@ module Creation =
 
     let makeCord (waveDefs: seq<seq<float>>) = 
         let wavesMatrix = waveDefs |> Seq.map (Seq.toArray) |> Seq.toArray
+        let waveScaleFactor = 1. / float wavesMatrix.Length 
         let maxLength = wavesMatrix |> Seq.maxBy (fun x -> x.Length)
         let getValues i = 
             seq { for x in 0 .. wavesMatrix.Length - 1 do 
                     yield if i > wavesMatrix.[x].Length then 0. else wavesMatrix.[x].[i] }
-        seq { for x in 0 .. maxLength.Length - 1 do yield getValues x |> Seq.sum }  
+        seq { for x in 0 .. maxLength.Length - 1 do yield (getValues x |> Seq.sum) * waveScaleFactor }  
 
 module Transformation =
     let scaleHeight multiplier (waveDef: seq<float>) = 
