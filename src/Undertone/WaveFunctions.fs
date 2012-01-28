@@ -78,14 +78,11 @@ module Transformation =
         |> Seq.mapi (fun i x -> x * (startMultiplier + (step * float i)))
 
 #if INTERACTIVE
-let myNote note octave = Creation.makeNote sine 0.25 note octave|> Transformation.tapper 1.0 0.1
-
-
-let tune =
-    seq { yield myNote Note.C 4 
-          yield myNote Note.E 4 }
-    |> makeCord
-
+let myNote note octave = 
+    Creation.makeNote Creation.sawtooth 0.2 note octave
+    // apply transformations to you're note to adjust the way it sounds 
+    |> Transformation.flatten 0.8
+    |> Transformation.tapper 1.0 0.3
 
 myNote Note.C 4 
 |> Seq.toList

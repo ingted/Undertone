@@ -12,6 +12,9 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:System="clr-namespace:System;assembly=mscorlib" 
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:controls="clr-namespace:System.Windows.Controls;assembly=System.Windows.Controls"
+    xmlns:tk="clr-namespace:System.Windows.Controls.DataVisualization.Charting;assembly=System.Windows.Controls.DataVisualization.Toolkit"
+    xmlns:dataVis="clr-namespace:System.Windows.Controls.DataVisualization;assembly=System.Windows.Controls.DataVisualization.Toolkit"
     mc:Ignorable="d"
     d:DesignHeight="300" d:DesignWidth="400" Loaded="UserControl_Loaded">
     <UserControl.Resources>
@@ -1068,6 +1071,81 @@
                     </Border>
                 </Grid>
             </ControlTemplate>
+            <Style x:Key="GridSplitterStyle1" TargetType="sdk:GridSplitter">
+                <Setter Property="Background" Value="#FFFFFFFF"/>
+                <Setter Property="IsTabStop" Value="true"/>
+                <Setter Property="HorizontalAlignment" Value="Right"/>
+                <Setter Property="PreviewStyle">
+                    <Setter.Value>
+                        <Style TargetType="Control">
+                            <Setter Property="Background" Value="#FF868686"/>
+                            <Setter Property="Template">
+                                <Setter.Value>
+                                    <ControlTemplate TargetType="Control">
+                                        <Grid x:Name="Root" Opacity=".5">
+                                            <Rectangle Fill="{TemplateBinding Background}"/>
+                                            <Grid x:Name="HorizontalTemplate" Height="6"/>
+                                            <Grid x:Name="VerticalTemplate" Visibility="Collapsed" Width="6"/>
+                                        </Grid>
+                                    </ControlTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </Style>
+                    </Setter.Value>
+                </Setter>
+                <Setter Property="Template">
+                    <Setter.Value>
+                        <ControlTemplate TargetType="sdk:GridSplitter">
+                            <Grid x:Name="Root" IsHitTestVisible="{TemplateBinding IsEnabled}">
+                                <VisualStateManager.VisualStateGroups>
+                                    <VisualStateGroup x:Name="CommonStates">
+                                        <VisualState x:Name="Normal"/>
+                                        <VisualState x:Name="MouseOver"/>
+                                        <VisualState x:Name="Disabled">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0" To="0.5" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="Root"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                    <VisualStateGroup x:Name="FocusStates">
+                                        <VisualStateGroup.Transitions>
+                                            <VisualTransition GeneratedDuration="0"/>
+                                        </VisualStateGroup.Transitions>
+                                        <VisualState x:Name="Unfocused"/>
+                                        <VisualState x:Name="Focused">
+                                            <Storyboard>
+                                                <DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisual"/>
+                                            </Storyboard>
+                                        </VisualState>
+                                    </VisualStateGroup>
+                                </VisualStateManager.VisualStateGroups>
+                                <Rectangle Fill="{TemplateBinding Background}" StrokeThickness="0"/>
+                                <Grid x:Name="HorizontalTemplate">
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Vertical" VerticalAlignment="Center" IsHitTestVisible="False">
+                                        <Path x:Name="UpArrow" Data="F1 M 0,0 14,0L 7,7 Z " Stretch="Fill" UseLayoutRounding="False" Fill="{TemplateBinding Foreground}" Height="6" RenderTransformOrigin="0.5,0.5" Margin="0,0,0,3" Width="13" HorizontalAlignment="Center" VerticalAlignment="Top">
+                                            <Path.RenderTransform>
+                                                <CompositeTransform ScaleY="-1"/>
+                                            </Path.RenderTransform>
+                                        </Path>
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="1" HorizontalAlignment="Center" VerticalAlignment="Center" Width="26" Margin="0,0,0,3"/>
+                                        <Path x:Name="DownArrow" Data="F1 M 0,0 14,0L 7,7 Z " Stretch="Fill" UseLayoutRounding="False" Fill="{TemplateBinding Foreground}" Height="6" Width="13" VerticalAlignment="Bottom" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Rectangle x:Name="Hit" HorizontalAlignment="Center" Width="30" Fill="White" VerticalAlignment="Center" Height="30" Opacity="0"/>
+                                </Grid>
+                                <Grid x:Name="VerticalTemplate" Visibility="Collapsed">
+                                    <StackPanel HorizontalAlignment="Center" Orientation="Horizontal" VerticalAlignment="Center" IsHitTestVisible="False" RenderTransformOrigin="0.5,0.5">
+                                        <Path x:Name="UpArrow1" Data="F1 M 0,6 6,0 L 6,13.5 Z" Stretch="Fill" UseLayoutRounding="False" Fill="{TemplateBinding Foreground}" Height="9" RenderTransformOrigin="0.5,0.5" Width="4" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="0,0,2,0"/>
+                                        <Rectangle Fill="{TemplateBinding Foreground}" Height="19" HorizontalAlignment="Center" VerticalAlignment="Center" Width="1" Margin="0,0,2,0"/>
+                                        <Path x:Name="DownArrow1" Data="F1 M 0,0 6,6.5 L 0,13 Z" Stretch="Fill" UseLayoutRounding="False" Fill="{TemplateBinding Foreground}" Height="9" Width="4" VerticalAlignment="Center" HorizontalAlignment="Center"/>
+                                    </StackPanel>
+                                    <Rectangle x:Name="Hit1" HorizontalAlignment="Center" Width="30" Fill="White" VerticalAlignment="Center" Height="30" Opacity="0"/>
+                                </Grid>
+                                <Rectangle x:Name="FocusVisual" IsHitTestVisible="false" Opacity="0" Stroke="#FF6DBDD1" StrokeThickness="1"/>
+                            </Grid>
+                        </ControlTemplate>
+                    </Setter.Value>
+                </Setter>
+            </Style>
             <Style x:Key="TextBoxStyle1" TargetType="TextBox">
                 <Setter Property="BorderThickness" Value="1"/>
                 <Setter Property="Background" Value="#FFFFFFFF"/>
@@ -1559,6 +1637,17 @@
                     </Setter.Value>
                 </Setter>
             </Style>
+      <Style TargetType="Control" x:Key="CollapsedStyle">
+        <Setter Property="Visibility" Value="Collapsed"/>
+      </Style>
+
+      <Style TargetType="dataVis:Legend" x:Key="CollapsedLegendStyle">
+        <Setter Property="Visibility" Value="Collapsed"/>
+        <Setter Property="Width" Value="0"/>
+      </Style>
+
+      <ControlTemplate x:Key="SimplifiedDataPoint" TargetType="tk:LineDataPoint">
+      </ControlTemplate>
     </UserControl.Resources>
     <Border BorderThickness="0" Background="{StaticResource BrushBackground}" CornerRadius="4" Padding="7,5,7,3">
 
@@ -1572,6 +1661,8 @@
                 <RowDefinition Height="35" />
                 <RowDefinition Height="25" />
                 <RowDefinition Height="0.51*" />
+                <RowDefinition Height="Auto"/>
+                <RowDefinition Height="0.49*"/>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="0.49*"/>
                 <RowDefinition Height="Auto"/>
@@ -1600,13 +1691,46 @@
                     Loading...
                 </Paragraph>
             </RichTextBox>
-
-            <Button Height="21" x:Name="btnGo" Margin="0" HorizontalAlignment="Left" Grid.Row="3" Content="run" VerticalAlignment="Center" Style="{StaticResource ButtonStyle1}" Background="#FF709CC4" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0" FontSize="16" Padding="13,-2,13,0" ToolTipService.ToolTip="Run selected code or entire script if current selection is empty"/>
+          <Button Height="21" x:Name="btnGo" Margin="0" HorizontalAlignment="Left" Grid.Row="3" Content="run" VerticalAlignment="Center" Style="{StaticResource ButtonStyle1}" Background="#FF709CC4" BorderBrush="{x:Null}" Foreground="White" BorderThickness="0" FontSize="16" Padding="13,-2,13,0" ToolTipService.ToolTip="Run selected code or entire script if current selection is empty"/>
             <TextBlock x:Name="txtInputLabel" Grid.Row="3" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
 				Text="Script Window" 
 				HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource TextBlockStyle1}" Margin="0,3,0,0" Foreground="#FFEEEEEE" FontSize="11" />
-            <!-- Interactive console (lower left pane) -->
-            <TextBox Grid.Row="4" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
+          <controls:GridSplitter x:Name="Splitter1"
+				Grid.Row="3" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource GridSplitterStyle1}" Background="{x:Null}" Foreground="{StaticResource BrushButton}" MinHeight="30" IsTabStop="False" />
+
+
+            <tk:Chart Grid.Row="4" Grid.Column="0"  x:Name="chart"
+                      LegendStyle="{StaticResource CollapsedLegendStyle}"
+                      TitleStyle="{StaticResource CollapsedStyle}">
+
+              <!-- define the line series -->
+              <tk:LineSeries x:Name="lineSeries"
+                         DependentValueBinding="{Binding X}" 
+                         IndependentValueBinding="{Binding Y}"
+                         TransitionDuration="0">
+                <tk:LineSeries.DataPointStyle>
+                  <Style TargetType="tk:LineDataPoint">
+                    <Setter Property="Visibility" Value="Collapsed"/>
+                    <Setter Property="Template" Value="{StaticResource SimplifiedDataPoint}"/>
+                    <Setter Property="Background" Value="#A00"/>
+                  </Style>
+                </tk:LineSeries.DataPointStyle>
+              
+              </tk:LineSeries>
+
+              <!-- configure the axes -->
+              <tk:Chart.Axes>
+                <tk:LinearAxis Orientation="X" Height="0"></tk:LinearAxis>
+              </tk:Chart.Axes>
+            </tk:Chart>
+
+            <controls:GridSplitter x:Name="Splitter2"
+				Grid.Row="5" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
+				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Style="{StaticResource GridSplitterStyle1}" Background="{x:Null}" Foreground="{StaticResource BrushButton}" MinHeight="30" IsTabStop="False" />
+          
+          <!-- Interactive console (lower left pane) -->
+            <TextBox Grid.Row="6" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
 				x:Name="txtOutput"
 				HorizontalAlignment="Stretch" VerticalAlignment="Stretch" 
 				FontFamily="Consolas, Courier New, Courier, monospace" IsReadOnly="True" 
@@ -1614,7 +1738,7 @@
 				HorizontalScrollBarVisibility="Visible" VerticalScrollBarVisibility="Visible" Style="{StaticResource TextBoxStyle1}" BorderBrush="{x:Null}" BorderThickness="0" FontSize="13" Padding="3,1" Background="#FFF4F7F7"
             >
             </TextBox>
-            <TextBlock x:Name="txtOutputLabel" Grid.Row="5" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
+            <TextBlock x:Name="txtOutputLabel" Grid.Row="7" Grid.Column="0" Grid.RowSpan="1" Grid.ColumnSpan="1"
 				Text="Output Window" 
 				HorizontalAlignment="Right" VerticalAlignment="Top" Style="{StaticResource TextBlockStyle1}" Margin="0,2,0,0" Foreground="#FFEEEEEE" FontSize="11" />
 

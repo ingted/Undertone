@@ -85,6 +85,7 @@
     <Compile Include="CompilerStreams.fs" />
     <Compile Include="ConsoleControl.xaml.fs" />
     <Compile Include="App.xaml.fs" />
+    <Compile Include="Visualization.fs" />
     <Resource Include="Images\Reset.png" />
     <Resource Include="Images\Copy.png" />
     <Resource Include="Images\Cut.png" />
@@ -165,6 +166,12 @@
     <Reference Include="system" />
     <Reference Include="System.Core" />
     <Reference Include="System.Net" />
+    <Reference Include="System.Windows.Controls">
+      <HintPath>..\..\lib\SilverlightToolkit\System.Windows.Controls.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Controls.DataVisualization.Toolkit">
+      <HintPath>..\..\lib\SilverlightToolkit\System.Windows.Controls.DataVisualization.Toolkit.dll</HintPath>
+    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>

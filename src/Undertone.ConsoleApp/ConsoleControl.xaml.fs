@@ -23,6 +23,7 @@ open System.Windows
 open System.Windows.Browser
 open System.Windows.Controls
 open System.Windows.Controls.Primitives
+open System.Windows.Controls.DataVisualization.Charting
 open System.Windows.Documents
 open System.Windows.Input
 open System.Windows.Media
@@ -72,6 +73,7 @@ type ConsoleControl() as this =
     let canvasButtons : StackPanel = this?canvasButtons
     let btnGo : Button = this?btnGo
     let layoutRoot : Grid = this?LayoutRoot
+    //let waveChart : Chart = this?waveChart
     //// Number of spaces inserted when Tab key is pressed.
     let TabSpace = "    "
     //// Delay between a source change and activation of the syntax colorization process. 
@@ -81,6 +83,7 @@ type ConsoleControl() as this =
     //// Wait time injected in the loop which transfers output from FSI to the UI.
     let OutputPause = 50
 
+// TODO externalize this
     let WelcomeMessage = "
 //
 // Welcome to Undertone, the musical combinator library for F#. To run code use:
@@ -113,6 +116,10 @@ let myNote note octave =
 let cord = 
     Creation.makeCord [ myNote Note.C 4 
                         myNote Note.E 4 ]
+
+// allows you to look at the shape of wave you've created 
+// (warning: can be quite slow)
+Visulization.ChartWave cord
 
 // sequences notes together to make a tune
 let tune =
@@ -346,6 +353,15 @@ player.Stop()
         // Clear any output and launch the new session
         txtOutput.Text <- String.Empty
         this.StartFsi()
+
+    [<ScriptableMember>]
+    member  this.ChartWave (wave: seq<float>) =
+        let lineSeries : LineSeries = this?lineSeries
+        let points =
+            wave
+            |> Seq.mapi (fun i x -> new Point(x, float i))
+            |> Seq.toArray
+        lineSeries.ItemsSource <- points
 
     interface IDisposable with 
         /// Releases resources used by this object.
