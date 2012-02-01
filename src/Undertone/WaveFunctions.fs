@@ -1,16 +1,7 @@
 ﻿module Undertone.Waves
 open System
+open Undertone
 
-#if INTERACTIVE
-#load "FSharpChart.fsx"
- 
-open System
-open System.Drawing
-open Samples.Charting
-open Samples.Charting.ChartStyles
-open System.Windows.Forms.DataVisualization.Charting
-
-#endif
 let private semitone = Math.Pow(2., 1. / 12.)
 let private middleC = 440. * Math.Pow(semitone, 3.) / 2.
 
@@ -78,13 +69,4 @@ module Transformation =
         |> Seq.mapi (fun i x -> x * (startMultiplier + (step * float i)))
 
 #if INTERACTIVE
-let myNote note octave = 
-    Creation.makeNote Creation.sawtooth 0.2 note octave
-    // apply transformations to you're note to adjust the way it sounds 
-    |> Transformation.flatten 0.8
-    |> Transformation.tapper 1.0 0.3
-
-myNote Note.C 4 
-|> Seq.toList
-|> FSharpChart.Line
 #endif
