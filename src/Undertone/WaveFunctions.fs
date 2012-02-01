@@ -67,6 +67,3 @@ module Transformation =
         let step = (endMultiplier - startMultiplier) / float waveVector.Length
         waveVector
         |> Seq.mapi (fun i x -> x * (startMultiplier + (step * float i)))
-
-#if INTERACTIVE
-#endif
