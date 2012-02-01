@@ -7,7 +7,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{d68f2d1d-be9b-41fa-8443-80209dbf058f}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <AssemblyName>Undertone</AssemblyName>
+    <AssemblyName>Undertone.Silverlight</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <SilverlightVersion>$(TargetFrameworkVersion)</SilverlightVersion>
     <FileAlignment>512</FileAlignment>
@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Enums.fs" />
+    <Compile Include="Player.Silverlight.fs" />
     <Compile Include="WaveFunctions.fs" />
     <Compile Include="PcmMediaStreamSource.fs" />
     <Compile Include="Player.fs" />

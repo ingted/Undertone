@@ -3,9 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Undertone.Web", "Undertone.Web\Undertone.Web.csproj", "{3BDECFDE-BE1D-4918-8D00-949205466EC5}"
 EndProject
-Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Undertone", "Undertone\Undertone.fsproj", "{D68F2D1D-BE9B-41FA-8443-80209DBF058F}"
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Undertone.Silverlight", "Undertone\Undertone.Silverlight.fsproj", "{D68F2D1D-BE9B-41FA-8443-80209DBF058F}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Undertone.ConsoleApp", "Undertone.ConsoleApp\Undertone.ConsoleApp.fsproj", "{EF7DEC4F-F138-4850-9F05-A518A7BA2350}"
+EndProject
+Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "Undertone", "Undertone\Undertone.fsproj", "{7D94B452-C216-4201-A911-9CEEB1BAB8D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -25,6 +27,10 @@ Global
 		{EF7DEC4F-F138-4850-9F05-A518A7BA2350}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF7DEC4F-F138-4850-9F05-A518A7BA2350}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF7DEC4F-F138-4850-9F05-A518A7BA2350}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7D94B452-C216-4201-A911-9CEEB1BAB8D8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7D94B452-C216-4201-A911-9CEEB1BAB8D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7D94B452-C216-4201-A911-9CEEB1BAB8D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7D94B452-C216-4201-A911-9CEEB1BAB8D8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

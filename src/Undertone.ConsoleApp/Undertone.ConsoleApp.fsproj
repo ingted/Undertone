@@ -146,12 +146,12 @@
     <Content Include="..\..\..\..\Program Files %28x86%29\Reference Assemblies\Microsoft\Framework\Silverlight\v4.0\System.Windows.Browser.dll">
       <Link>System.Windows.Browser.dll</Link>
     </Content>
-    <Content Include="..\Undertone\bin\Debug\Undertone.dll">
-      <Link>Undertone.dll</Link>
-    </Content>
-    <Content Include="..\Undertone\bin\Debug\Undertone.pdb">
-      <Link>Undertone.pdb</Link>
-    </Content>
+    <None Include="..\Undertone\bin\Debug\Undertone.Silverlight.dll">
+      <Link>Undertone.Silverlight.dll</Link>
+    </None>
+    <None Include="..\Undertone\bin\Debug\Undertone.Silverlight.pdb">
+      <Link>Undertone.Silverlight.pdb</Link>
+    </None>
     <Content Include="init.fsx" />
   </ItemGroup>
   <ItemGroup>
@@ -176,8 +176,8 @@
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Undertone\Undertone.fsproj">
-      <Name>Undertone</Name>
+    <ProjectReference Include="..\Undertone\Undertone.Silverlight.fsproj">
+      <Name>Undertone.Silverlight</Name>
       <Project>{d68f2d1d-be9b-41fa-8443-80209dbf058f}</Project>
       <Private>True</Private>
     </ProjectReference>
