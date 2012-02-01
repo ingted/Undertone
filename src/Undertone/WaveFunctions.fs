@@ -67,3 +67,19 @@ module Transformation =
         let step = (endMultiplier - startMultiplier) / float waveVector.Length
         waveVector
         |> Seq.mapi (fun i x -> x * (startMultiplier + (step * float i)))
+
+    let private gaussian a b c x  = Math.Pow((a * Math.E), -(Math.Pow(x - b, 2.) / Math.Pow(c * 2., 2.)))
+
+    let gaussianTapper length (waveDef: seq<float>) = 
+        let waveVector = waveDef |> Seq.toArray
+        let step = 1. / float waveVector.Length
+        waveVector
+        |> Seq.mapi (fun i x -> x * gaussian 1. 0. length (step * float i))
+
+    let revGaussianTapper length (waveDef: seq<float>) = 
+        let waveVector = waveDef |> Seq.toArray
+        let len = float waveVector.Length
+        let step = 1. / len
+        waveVector
+        |> Seq.mapi (fun i x -> x * gaussian 1. 0. length (step * (len - float i)))
+
