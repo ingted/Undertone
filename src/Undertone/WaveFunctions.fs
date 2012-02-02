@@ -83,3 +83,12 @@ module Transformation =
         waveVector
         |> Seq.mapi (fun i x -> x * gaussian 1. 0. length (step * (len - float i)))
 
+    let doubleGaussianTapper startLength endLength (waveDef: seq<float>) = 
+        let waveVector = waveDef |> Seq.toArray
+        let len = float waveVector.Length
+        let step = 1. / len
+        waveVector
+        |> Seq.mapi (fun i x -> x * 
+                                (gaussian 1. 0. startLength (step * (len - float i))) * 
+                                (gaussian 1. 0. endLength (step * float i)))
+
