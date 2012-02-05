@@ -35,7 +35,7 @@ let tune =
 
 
 // play the tune
-let player = Player.Play(sample, Repeat = true)
+let player = Player.Play(tune, Repeat = true)
 
 // stop the tune, make refinements then play again
 player.Stop()

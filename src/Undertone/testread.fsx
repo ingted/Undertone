@@ -8,7 +8,12 @@
 open System.IO
 open Undertone
 
-let file = Reader.read (Path.Combine(__SOURCE_DIRECTORY__, "..\..\data\susan2.wav"))
+let ffpath = @"C:\Users\Robert\Music\Franz Ferdinand\Tonight\01 - Ulysses.mp3"
+let file = 
+    Reader.read ffpath 
+    //Reader.read (Path.Combine(__SOURCE_DIRECTORY__, "..\..\data\susan3.wav"))
+
+Seq.length file // 16,865,280
 
 #load "FSharpChart.fsx"
  
@@ -20,10 +25,16 @@ open System.Windows.Forms.DataVisualization.Charting
 
 let sample =
     file 
-    |> Seq.skip 150000
-    |> Seq.take 10000
+    //|> Seq.skip 30000
+    |> Seq.take 15000
+    |> Seq.toArray
 
-let player = Player.Play(sample, Repeat = true)
+let sample' =
+    seq { for _ in 0 .. 5 do yield! sample }
+        
+
+let player = Player.Play(sample', Repeat = true)
+player.Stop()
 
 sample
 |> Seq.toList
