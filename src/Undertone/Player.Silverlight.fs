@@ -30,7 +30,7 @@ type MediaElementProxy() =
 type SliverlightPlayer(sampleSource) =
     let mediaElement = new MediaElementProxy()
             
-    let streamSource = new PcmMediaStreamSource(44100, 1, sampleSource)
+    let streamSource = new PcmMediaStreamSource(MiscConsts.SampleRate, 1, sampleSource)
     do mediaElement.SetSource(streamSource)
 
     do streamSource.FinishedSample.AddHandler(fun _ _ -> mediaElement.Stop())

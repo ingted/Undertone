@@ -52,6 +52,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MiscConsts.fs" />
     <Compile Include="Enums.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="PcmMediaStreamSource.fs" />

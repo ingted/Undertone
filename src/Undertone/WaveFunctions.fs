@@ -2,15 +2,32 @@
 open System
 open Undertone
 
-let private semitone = Math.Pow(2., 1. / 12.)
-let private middleC = 440. * Math.Pow(semitone, 3.) / 2.
+/// The ratio require to move from one semi-tone to the next
+/// See: http://en.wikipedia.org/wiki/Semitone
+let private semitone = 
+    Math.Pow(2., 1. / 12.)
 
-let private frequencyOfNote (note: Note) octave = middleC * Math.Pow(semitone, double (int note)) * Math.Pow(2., double (octave - 4))
+/// Since our Note enum is relative to c, we need to find middle c.
+/// We know A440 = 440 hz and that the next c is three semi tones 
+/// above that, but this is c one ocative above middle c, so we 
+/// half the result to get middle c.
+/// Middle c is around 261.626 Hz, and this approximately the value we get
+/// See: http://en.wikipedia.org/wiki/C_(musical_note)
+let private middleC = 
+    MiscConsts.A440 * Math.Pow(semitone, 3.) / 2.
 
-let private phaseAngleIncrementOfFrequency frequency = frequency / 44100.
+/// Converts from our note enum to the notes frequency
+let private frequencyOfNote (note: Note) octave = 
+    middleC * 
+    // calculate the ratio need to move to the note's semitone
+    Math.Pow(semitone, double (int note)) * 
+    // calculate the ratio need to move to the note's octave
+    Math.Pow(2., double (octave - 4))
+
+let private phaseAngleIncrementOfFrequency frequency = frequency / double MiscConsts.SampleRate
 
 module Creation =
-    let private samplesPerBar = float ((44100 / 6) * 4)
+    let private samplesPerBar = float ((MiscConsts.SampleRate / 6) * 4)
 
     let makeSilence (length: float) =
         let length = int (length * samplesPerBar)

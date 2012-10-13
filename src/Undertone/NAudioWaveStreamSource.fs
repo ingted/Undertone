@@ -10,7 +10,7 @@ type NAudioWaveStreamSource(sampleSource: seq<float>) =
 
     let mutable pos =  0L
     // put these constants some where
-    let waveFormat = new WaveFormat(44100, 1)
+    let waveFormat = new WaveFormat(MiscConsts.SampleRate, 1)
     
     override x.WaveFormat = waveFormat
     
