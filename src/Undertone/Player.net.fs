@@ -25,7 +25,7 @@ type NetPlayer(sampleSource) =
         sp.Stop()
     member x.Repeat
         with get() = false // TODO
-        and  set value = () // TODO
+        and  set (value: bool) = () // TODO
     member x.SetSampleSource sampleSource = 
         let sp = x :> IPlayer
         sp.SetSampleSource sampleSource
