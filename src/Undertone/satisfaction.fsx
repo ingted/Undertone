@@ -1,4 +1,5 @@
 ﻿#r @"..\..\lib\NAudio\NAudio.dll"
+#load "MiscConsts.fs"
 #load "Enums.fs"
 #load "WaveFunctions.fs"
 #load "NAudioWaveStreamSource.fs"
