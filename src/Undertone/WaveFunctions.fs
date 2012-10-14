@@ -24,15 +24,27 @@ let private frequencyOfNote (note: Note) octave =
     // calculate the ratio need to move to the note's octave
     Math.Pow(2., double (octave - 4))
 
-let private phaseAngleIncrementOfFrequency frequency = frequency / double MiscConsts.SampleRate
+/// calculates the distance you need to move in each sample 
+let private phaseAngleIncrementOfFrequency frequency = 
+    frequency / double MiscConsts.SampleRate
 
+/// Functions for creating waves
 module Creation =
-    let private samplesPerBar = float ((MiscConsts.SampleRate / 6) * 4)
+    /// beats per minute
+    let private bmp = 90.
+    /// number of beats in a bar
+    let private beatsPerBar = 4.
+    /// number bars
+    let private barsPerSecond =  bmp /  (60. * beatsPerBar)
+    /// number of samples required to make a bar of music
+    let private samplesPerBar = (float MiscConsts.SampleRate * barsPerSecond)
 
+    /// make a period of silence
     let makeSilence (length: float) =
         let length = int (length * samplesPerBar)
         Seq.init length (fun _ -> 0.)
 
+    /// make a wave using the given function, length and frequency
     let makeWave waveFunc (length: float) frequency =
         let phaseAngleIncrement = phaseAngleIncrementOfFrequency frequency
         let length = int (length * samplesPerBar)
@@ -41,20 +53,31 @@ module Creation =
             let x = Math.Floor(phaseAngle)
             waveFunc (phaseAngle - x))
 
+    /// make a wave using the given function, length note and octave
     let makeNote waveFunc length note octave =
         let frequency = frequencyOfNote note octave
         makeWave waveFunc length frequency
 
+    /// function for making a sine wave
+    let sine phaseAngle = 
+        Math.Sin(2. * Math.PI * phaseAngle)
 
-    let sine phaseAngle = Math.Sin(2. * Math.PI * phaseAngle)
-    let square phaseAngle = if phaseAngle < 0.5 then -1.0 else 1.0
+    /// function for making a square wave
+    let square phaseAngle = 
+        if phaseAngle < 0.5 then -1.0 else 1.0
+
+    /// function for making triangular waves
     let triangle phaseAngle =                     
         if phaseAngle < 0.5 then 
             2. * phaseAngle
         else
             1. - (2. * phaseAngle)
-    let sawtooth phaseAngle = -1. + phaseAngle
 
+    // function for making making "saw tooth" wave
+    let sawtooth phaseAngle = 
+        -1. + phaseAngle
+
+    // function for combining several waves into a cord combines
     let makeCord (waveDefs: seq<seq<float>>) = 
         let wavesMatrix = waveDefs |> Seq.map (Seq.toArray) |> Seq.toArray
         let waveScaleFactor = 1. / float wavesMatrix.Length 
@@ -64,35 +87,47 @@ module Creation =
                     yield if i > wavesMatrix.[x].Length then 0. else wavesMatrix.[x].[i] }
         seq { for x in 0 .. maxLength.Length - 1 do yield (getValues x |> Seq.sum) * waveScaleFactor }  
 
+/// functions for transforming waves
 module Transformation =
+    /// makes the waves amplitude large or small by scaling by the given multiplier
     let scaleHeight multiplier (waveDef: seq<float>) = 
         waveDef |> Seq.map (fun x -> x * multiplier)
 
     let private rnd = new Random()
+
+    /// Adds some noise to the wave (not recommended)
     let addNoise multiplier (waveDef: seq<float>) = 
         waveDef 
         |> Seq.map (fun x ->
                         let rndValue = 0.5 - rnd.NextDouble()
                         x +  (rndValue * multiplier))
 
+    /// flattens the wave at the given limit to give an overdrive effect
     let flatten limit (waveDef: seq<float>) = 
         waveDef 
         |> Seq.map (fun x -> max -limit (min x limit))
 
+    /// provides a way to linearly tapper a wave, the startMultiplier is 
+    /// applied to the first value of the a wave, and endMultiplier is
+    /// applied to the last value, the other values have value that is linearly
+    /// interpolated between the two values
     let tapper startMultiplier endMultiplier (waveDef: seq<float>) = 
         let waveVector = waveDef |> Seq.toArray
         let step = (endMultiplier - startMultiplier) / float waveVector.Length
         waveVector
         |> Seq.mapi (fun i x -> x * (startMultiplier + (step * float i)))
 
+    /// gets a point on the gaussian distribution
     let private gaussian a b c x  = Math.Pow((a * Math.E), -(Math.Pow(x - b, 2.) / Math.Pow(c * 2., 2.)))
 
+    /// applies a gaussian tapper to the front of a wave
     let gaussianTapper length (waveDef: seq<float>) = 
         let waveVector = waveDef |> Seq.toArray
         let step = 1. / float waveVector.Length
         waveVector
         |> Seq.mapi (fun i x -> x * gaussian 1. 0. length (step * float i))
 
+    /// applies a gaussian tapper to the back of a wave
     let revGaussianTapper length (waveDef: seq<float>) = 
         let waveVector = waveDef |> Seq.toArray
         let len = float waveVector.Length
@@ -100,6 +135,7 @@ module Transformation =
         waveVector
         |> Seq.mapi (fun i x -> x * gaussian 1. 0. length (step * (len - float i)))
 
+    /// applies a gaussian tapper to the front and back of a wave
     let doubleGaussianTapper startLength endLength (waveDef: seq<float>) = 
         let waveVector = waveDef |> Seq.toArray
         let len = float waveVector.Length

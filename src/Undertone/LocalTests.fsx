@@ -1,4 +1,5 @@
 ﻿#r @"..\..\lib\NAudio\NAudio.dll"
+#load "MiscConsts.fs"
 #load "Enums.fs"
 #load "WaveFunctions.fs"
 #load "NAudioWaveStreamSource.fs"
@@ -10,9 +11,9 @@ open Undertone.Waves
 let myNote note octave = 
     // try other types of wave function, such as Creation.sine 
     // or Creation.square
-    Creation.makeNote Creation.sine 0.25 note octave
+    Creation.makeNote Creation.sine 1. note octave
     // apply transformations to you're note to adjust the way it sounds 
-    |> Transformation.gaussianTapper 0.2
+    //|> Transformation.gaussianTapper 0.2
     |> Transformation.revGaussianTapper 0.6
     //|> Transformation.addNoise
 

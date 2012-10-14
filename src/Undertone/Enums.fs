@@ -1,12 +1,7 @@
 ﻿namespace Undertone
 
-type Waveform =
-    | Sine              = 0
-    | Square            = 1
-    | Triangle          = 2
-    | Sawtooth          = 3
-    | ReverseSawtooth   = 4
-
+/// the twelve notes in an octave, note some are Enharmonics
+/// See: http://en.wikipedia.org/wiki/Enharmonic
 type Note =
     | Cflat     = -1
     | C         = 0 
