@@ -87,6 +87,20 @@ module Creation =
                     yield if i > wavesMatrix.[x].Length then 0. else wavesMatrix.[x].[i] }
         seq { for x in 0 .. maxLength.Length - 1 do yield (getValues x |> Seq.sum) * waveScaleFactor }  
 
+    // same as makeCord but does use arrays so can handle long or even infinite sequences.
+    let combine (waveDefs: seq<seq<float>>) = 
+        let enumerators = waveDefs |> Seq.map (fun x -> x.GetEnumerator())
+        let rec loop () =
+            let values = 
+                enumerators 
+                |> Seq.choose (fun x -> if x.MoveNext() then Some x.Current else None) 
+                |> Seq.toList
+            match values with
+            | [] -> None
+            | x -> Some ((x |> Seq.sum), ())
+        Seq.unfold loop
+        //seq { for x in 0 .. maxLength.Length - 1 do yield (getValues x |> Seq.sum) * waveScaleFactor }  
+
 /// functions for transforming waves
 module Transformation =
     /// makes the waves amplitude large or small by scaling by the given multiplier
