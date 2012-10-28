@@ -3,19 +3,30 @@ open Undertone
 open NAudio.Wave
 
 type NetPlayer(sampleSource) =
+    let sampleSource = ref sampleSource
+    let repeat = ref false
+    let doingStop = ref false
     let player = new WaveOut()
-    let wave = new NAudioWaveStreamSource(sampleSource)
-    do player.Init(wave)
+    do player.Init(new NAudioWaveStreamSource(!sampleSource))
+    let doRepeat() =
+        if !repeat && not !doingStop then
+            player.Init(new NAudioWaveStreamSource(!sampleSource))
+            player.Play()
+        if !doingStop then doingStop := false
+    do player.PlaybackStopped.AddHandler(fun _ _ -> doRepeat())
     interface IPlayer with
         member __.Play() = player.Play()
-        member __.Stop() = player.Stop()
+        member __.Stop() =
+            if player.PlaybackState = PlaybackState.Playing then 
+                doingStop := true
+            player.Stop()
         member __.Repeat
-            with get() = false //TODO
-            and  set x = () //TODO
-        member __.SetSampleSource sampleSource = 
-            // TOOD not sure if this makes sense, may need a new player ?
-            let wave = new NAudioWaveStreamSource(sampleSource)
-            do player.Init(wave)
+            with get() = !repeat
+            and  set x = repeat := x
+        member x.SetSampleSource newSampleSource = 
+            // TODO this needs to handled better
+            sampleSource := newSampleSource
+            x.Stop()
 
     member x.Play() =
         let sp = x :> IPlayer
@@ -24,8 +35,12 @@ type NetPlayer(sampleSource) =
         let sp = x :> IPlayer
         sp.Stop()
     member x.Repeat
-        with get() = false // TODO
-        and  set (value: bool) = () // TODO
+        with get() = 
+            let sp = x :> IPlayer
+            sp.Repeat
+        and  set (value: bool) = 
+            let sp = x :> IPlayer
+            sp.Repeat <- value
     member x.SetSampleSource sampleSource = 
         let sp = x :> IPlayer
         sp.SetSampleSource sampleSource

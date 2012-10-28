@@ -10,10 +10,8 @@ open System.IO
 open Undertone
 open Undertone.Waves
 
-let bpm = 60.
+let bpm = 90.
 let crotchet = Time.noteValue bpm Time.crotchet
-
-let approxLength = float crotchet / float MiscConsts.SampleRate
 
 let myNote note octave = 
     // try other types of wave function, such as Creation.sine 
@@ -51,25 +49,28 @@ let tune =
           yield! myNote Note.E 4 }
 
 let tune' =
-    [ [ Note.C, 4; Note.D, 4 ] |> Seq.ofList, crotchet 
-      [ Note.E, 4; Note.D, 4 ] |> Seq.ofList, crotchet
-      [ Note.G, 4; Note.C, 5 ] |> Seq.ofList, crotchet
-      [ Note.C, 5 ] |> Seq.ofList, crotchet
-      [ Note.G, 4 ] |> Seq.ofList, crotchet
-      [ Note.E, 4 ] |> Seq.ofList, crotchet
-      [ Note.C, 4 ] |> Seq.ofList, crotchet 
-      [ Note.G, 3 ] |> Seq.ofList, crotchet 
-      [ Note.E, 3 ] |> Seq.ofList, crotchet 
-      [ Note.C, 3 ] |> Seq.ofList, crotchet 
-      [ Note.E, 3 ] |> Seq.ofList, crotchet 
-      [ Note.G, 3 ] |> Seq.ofList, crotchet 
-      [ Note.C, 4 ] |> Seq.ofList, crotchet 
-      [ Note.E, 4 ] |> Seq.ofList, crotchet 
-      [ Note.G, 4 ] |> Seq.ofList, crotchet 
-      [ Note.E, 4 ] |> Seq.ofList, crotchet ]
+    [ [ Note.C, 4; Note.D, 4 ], crotchet 
+      [ Note.E, 4; Note.D, 4 ], crotchet
+      [ Note.G, 4; Note.C, 5 ], crotchet
+      [ Note.C, 5; Note.G, 4 ], crotchet
+      [ Note.G, 4; Note.E, 4 ], crotchet
+      [ Note.E, 4; Note.C, 4 ], crotchet
+      [ Note.C, 4; Note.G, 3 ], crotchet 
+      [ Note.G, 3; Note.E, 3 ], crotchet 
+      [ Note.E, 3; Note.C, 3 ], crotchet 
+      [ Note.C, 3; Note.E, 3 ], crotchet 
+      [ Note.E, 3; Note.G, 3 ], crotchet 
+      [ Note.G, 3; ], crotchet 
+      [ Note.C, 4; Note.E, 4 ], crotchet 
+      [ Note.E, 4; ], crotchet 
+      [ Note.G, 4; Note.E, 4 ], crotchet 
+      [ Note.E, 4; ], crotchet ]
 
 // play the tune
 let player = Player.Play(tune, Repeat = true)
+player.Stop()
+player.Repeat <- false
+player.SetSampleSource(NotePlayer.play myNote tune') 
 let player' = Player.Play(NotePlayer.play myNote tune', Repeat = true)
 
 let noteToPianoName note =

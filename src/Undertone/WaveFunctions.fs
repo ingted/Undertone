@@ -190,7 +190,7 @@ module NotePlayer =
                 incr count
                 yield e.Current }
 
-    let play (noteTable: Note -> int -> seq<float>) (notes: seq<seq<Note*int>*int>) =
+    let play (noteTable: Note -> int -> seq<float>) (notes: seq<#seq<Note*int>*int>) =
         seq { for cordNotes, length in notes do
                 let notes = cordNotes |> Seq.map (fun (note, octave) -> noteTable note octave)
                 yield! Creation.combine notes |> safeTake length }
