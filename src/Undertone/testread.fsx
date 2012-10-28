@@ -1,4 +1,5 @@
 ﻿#r @"..\..\lib\NAudio\NAudio.dll"
+#load "MiscConsts.fs"
 #load "Enums.fs"
 #load "WaveFunctions.fs"
 #load "NAudioWaveStreamSource.fs"
@@ -8,12 +9,14 @@
 open System.IO
 open Undertone
 
-let ffpath = @"C:\Users\Robert\Music\Franz Ferdinand\Tonight\01 - Ulysses.mp3"
+let ffpath = @"C:\code\Undertone\src\Undertone\piano\Piano.pp.A1.aiff"
 let file = 
-    Reader.read ffpath 
+    IO.read ffpath 
     //Reader.read (Path.Combine(__SOURCE_DIRECTORY__, "..\..\data\susan3.wav"))
 
 Seq.length file // 16,865,280
+
+let file' = file |> Seq.map ((*) 100.)
 
 #load "FSharpChart.fsx"
  
@@ -33,10 +36,11 @@ let sample' =
     seq { for _ in 0 .. 5 do yield! sample }
         
 
-let player = Player.Play(sample', Repeat = true)
+let player = Player.Play(file', Repeat = true)
+player.Play()
 player.Stop()
 
-sample
+file'
 |> Seq.toList
 |> FSharpChart.Line
 

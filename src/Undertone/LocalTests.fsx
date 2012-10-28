@@ -5,15 +5,22 @@
 #load "NAudioWaveStreamSource.fs"
 #load "Player.fs"
 #load "Player.net.fs"
+#load "Reader.fs"
+open System.IO
 open Undertone
 open Undertone.Waves
+
+let bpm = 60.
+let crotchet = Time.noteValue bpm Time.crotchet
+
+let approxLength = float crotchet / float MiscConsts.SampleRate
 
 let myNote note octave = 
     // try other types of wave function, such as Creation.sine 
     // or Creation.square
-    Creation.makeNote Creation.sine 1. note octave
+    Creation.makeNote Creation.sine crotchet note octave
     // apply transformations to you're note to adjust the way it sounds 
-    //|> Transformation.gaussianTapper 0.2
+    |> Transformation.gaussianTapper 0.2
     |> Transformation.revGaussianTapper 0.6
     //|> Transformation.addNoise
 
@@ -43,8 +50,58 @@ let tune =
           yield! myNote Note.G 4 
           yield! myNote Note.E 4 }
 
+let tune' =
+    [ [ Note.C, 4; Note.D, 4 ] |> Seq.ofList, crotchet 
+      [ Note.E, 4; Note.D, 4 ] |> Seq.ofList, crotchet
+      [ Note.G, 4; Note.C, 5 ] |> Seq.ofList, crotchet
+      [ Note.C, 5 ] |> Seq.ofList, crotchet
+      [ Note.G, 4 ] |> Seq.ofList, crotchet
+      [ Note.E, 4 ] |> Seq.ofList, crotchet
+      [ Note.C, 4 ] |> Seq.ofList, crotchet 
+      [ Note.G, 3 ] |> Seq.ofList, crotchet 
+      [ Note.E, 3 ] |> Seq.ofList, crotchet 
+      [ Note.C, 3 ] |> Seq.ofList, crotchet 
+      [ Note.E, 3 ] |> Seq.ofList, crotchet 
+      [ Note.G, 3 ] |> Seq.ofList, crotchet 
+      [ Note.C, 4 ] |> Seq.ofList, crotchet 
+      [ Note.E, 4 ] |> Seq.ofList, crotchet 
+      [ Note.G, 4 ] |> Seq.ofList, crotchet 
+      [ Note.E, 4 ] |> Seq.ofList, crotchet ]
+
 // play the tune
 let player = Player.Play(tune, Repeat = true)
+let player' = Player.Play(NotePlayer.play myNote tune', Repeat = true)
+
+let noteToPianoName note =
+    match note with
+    | Note.C         -> "C" 
+    | Note.Csharp    -> "Db"
+    | Note.Dflat     -> "Db"
+    | Note.D         -> "D"
+    | Note.Dsharp    -> "Eb"
+    | Note.Eflat     -> "Eb"
+    | Note.E         -> "E"
+    | Note.Fflat     -> "Fb"
+    | Note.Esharp    -> "Fb"
+    | Note.F         -> "F"
+    | Note.Fsharp    -> "Gb"
+    | Note.Gflat     -> "Gb"
+    | Note.G         -> "G"
+    | Note.Gsharp    -> "Ab"
+    | Note.Aflat     -> "Ab"
+    | Note.A         -> "A"
+    | Note.Asharp    -> "Bb"
+    | Note.Bflat     -> "Bb"
+    | Note.B         -> "B"
+    | _ -> failwith "invalid note"
+
+
+
+let altMyNote note octave =
+    let noteSource = @"C:\Users\Robert\Music\instruments\piano\wav"
+    IO.read (Path.Combine(noteSource, sprintf "Piano.pp.%s%i.wav" (noteToPianoName note) octave))
+
+let player'' = Player.Play(NotePlayer.play altMyNote tune', Repeat = true)
 
 // stop the tune, make refinements then play again
 player.Stop()

@@ -1,15 +1,15 @@
 ﻿namespace Undertone
 open System
 open NAudio.Wave
+open Undertone
 
 type NAudioWaveStreamSource(sampleSource: seq<float>) =
     inherit WaveStream()
 
-    // TODO this toArray is bad, stops large samples being played
     let sampleEnumerator = sampleSource.GetEnumerator()
 
     let mutable pos =  0L
-    // put these constants some where
+
     let waveFormat = new WaveFormat(MiscConsts.SampleRate, 1)
     
     override x.WaveFormat = waveFormat

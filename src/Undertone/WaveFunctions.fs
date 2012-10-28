@@ -27,27 +27,48 @@ let private frequencyOfNote (note: Note) octave =
 /// calculates the distance you need to move in each sample 
 let private phaseAngleIncrementOfFrequency frequency = 
     frequency / double MiscConsts.SampleRate
+/// functions an constants for manipulating musical time
+module Time =
+    /// this hard codes our module to the lower "4" in 4/4 time
+    let beatsPerSemibreve = 4.
+    /// number bars
+    let private beatsPerSecond bmp =  60. / bmp   
+    /// number of samples required to make a bar of m- usic
+    let private samplesPerBar bmp = (float MiscConsts.SampleRate * beatsPerSecond bmp * beatsPerSemibreve)
+
+    /// longa - either twice or three times as long as a breve (we choose twice)
+    /// it is no longer used in modern music notation
+    let longa = 4.
+    /// double whole note -  twice as long as semibreve
+    let breve = 2.
+    /// whole note -  its length is equal to four beats in 4/4 time
+    /// most other notes are fractions of the whole note
+    let semibreve = 1.
+    /// half note
+    let minim = 1. / 2.
+    /// quarter note
+    let crotchet = 1. / 4.
+    /// eighth note
+    let quaver = 1. / 8.
+    /// sixteenth note
+    let semiquaver = 1. / 16.
+    /// thirty-second note
+    let demisemiquaver = 1. / 32.
+
+    /// caculates a note's length in samples
+    let noteValue bmp note =
+        samplesPerBar bmp * note |> int
 
 /// Functions for creating waves
 module Creation =
-    /// beats per minute
-    let private bmp = 90.
-    /// number of beats in a bar
-    let private beatsPerBar = 4.
-    /// number bars
-    let private barsPerSecond =  bmp /  (60. * beatsPerBar)
-    /// number of samples required to make a bar of music
-    let private samplesPerBar = (float MiscConsts.SampleRate * barsPerSecond)
 
     /// make a period of silence
-    let makeSilence (length: float) =
-        let length = int (length * samplesPerBar)
+    let makeSilence length =
         Seq.init length (fun _ -> 0.)
 
     /// make a wave using the given function, length and frequency
-    let makeWave waveFunc (length: float) frequency =
+    let makeWave waveFunc length frequency =
         let phaseAngleIncrement = phaseAngleIncrementOfFrequency frequency
-        let length = int (length * samplesPerBar)
         Seq.init length (fun x -> 
             let phaseAngle = phaseAngleIncrement * (float x)
             let x = Math.Floor(phaseAngle)
@@ -89,17 +110,17 @@ module Creation =
 
     // same as makeCord but does use arrays so can handle long or even infinite sequences.
     let combine (waveDefs: seq<seq<float>>) = 
-        let enumerators = waveDefs |> Seq.map (fun x -> x.GetEnumerator())
-        let rec loop () =
+        let enumerators = waveDefs |> Seq.map (fun x -> x.GetEnumerator()) |> Seq.cache
+        let loop () =
             let values = 
                 enumerators 
-                |> Seq.choose (fun x -> if x.MoveNext() then Some x.Current else None) 
+                |> Seq.choose 
+                    (fun x -> if x.MoveNext() then Some x.Current else None) 
                 |> Seq.toList
             match values with
             | [] -> None
             | x -> Some ((x |> Seq.sum), ())
-        Seq.unfold loop
-        //seq { for x in 0 .. maxLength.Length - 1 do yield (getValues x |> Seq.sum) * waveScaleFactor }  
+        Seq.unfold loop ()
 
 /// functions for transforming waves
 module Transformation =
@@ -159,3 +180,17 @@ module Transformation =
                                 (gaussian 1. 0. startLength (step * (len - float i))) * 
                                 (gaussian 1. 0. endLength (step * float i)))
 
+module NotePlayer =
+    let private safeTake wanted (source : seq<'T>) = 
+        (* Note: don't create or dispose any IEnumerable if n = 0 *)
+        if wanted = 0 then Seq.empty else  
+        seq { use e = source.GetEnumerator() 
+              let count = ref 0
+              while e.MoveNext() && !count < wanted do
+                incr count
+                yield e.Current }
+
+    let play (noteTable: Note -> int -> seq<float>) (notes: seq<seq<Note*int>*int>) =
+        seq { for cordNotes, length in notes do
+                let notes = cordNotes |> Seq.map (fun (note, octave) -> noteTable note octave)
+                yield! Creation.combine notes |> safeTake length }

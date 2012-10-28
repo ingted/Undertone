@@ -1,6 +1,9 @@
-﻿module Undertone.Reader
+﻿module Undertone.IO
+// TODO rename file ... once I've found a better name than IO
 open System
+open System.IO
 open NAudio.Wave
+open Undertone
 
 let private descretePairwise (source: seq<'T>) =
     seq { use ie = source.GetEnumerator() 
@@ -12,17 +15,18 @@ let private descretePairwise (source: seq<'T>) =
 
 let read (file: string) =
     let initSeq =   
-        seq { 
+        seq {
+            let ext = 
+                Path.GetExtension file
+                |> fun x -> x.ToUpperInvariant()
             use reader =
-                if file.EndsWith(".mp3") then
-                    new Mp3FileReader(file) :> WaveStream
-                else
-                    new WaveFileReader(file) :> WaveStream
-        //    printfn "%i" reader.WaveFormat.Channels
-        //    printfn "%i" reader.WaveFormat.SampleRate
+                match ext with
+                | ".MP3" -> new Mp3FileReader(file) :> WaveStream
+                | ".AIFF" | ".AIF" -> new AiffFileReader(file) :> WaveStream
+                | _ -> new WaveFileReader(file) :> WaveStream
             let readBytes = ref 1
+            let buffer: byte[] = Array.zeroCreate 4096
             while !readBytes > 0 do
-                let buffer: byte[] = Array.zeroCreate 4096
                 readBytes := reader.Read(buffer, 0, buffer.Length)
                 let bytes = buffer.[0 .. !readBytes - 1 ]
                 yield! bytes }
@@ -33,5 +37,12 @@ let read (file: string) =
     |> Seq.map (fun (_, (b1,b2)) -> float (int16 b1 + (int16 b2 <<< 8)) /  float Int16.MaxValue)
 
 
-
-
+let write (path: string) seq =
+    use waveReader = new NAudioWaveStreamSource(seq)
+    //use wavFileStream = new FileStream(path, FileMode.Create)
+    use wavStream = new WaveFileWriter(path, new WaveFormat(MiscConsts.SampleRate, 1)) 
+    let readBytes = ref 1
+    let buffer: byte[] = Array.zeroCreate 4096
+    while !readBytes > 0 do
+        readBytes := waveReader.Read(buffer, 0, buffer.Length)
+        wavStream.Write(buffer, 0, !readBytes)
