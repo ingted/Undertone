@@ -10,7 +10,7 @@
 #load "NAudioWaveStreamSource.fs"
 #load "Player.fs"
 #load "Player.net.fs"
-#load "Reader.fs"
+#load "IO.fs"
 open System.IO
 open Undertone
 open Undertone.Waves
@@ -83,22 +83,15 @@ let noteToPianoName note =
     match note with
     | Note.C         -> "C" 
     | Note.Csharp    -> "Db"
-    | Note.Dflat     -> "Db"
     | Note.D         -> "D"
     | Note.Dsharp    -> "Eb"
-    | Note.Eflat     -> "Eb"
     | Note.E         -> "E"
-    | Note.Fflat     -> "Fb"
     | Note.Esharp    -> "Fb"
-    | Note.F         -> "F"
     | Note.Fsharp    -> "Gb"
-    | Note.Gflat     -> "Gb"
     | Note.G         -> "G"
     | Note.Gsharp    -> "Ab"
-    | Note.Aflat     -> "Ab"
     | Note.A         -> "A"
     | Note.Asharp    -> "Bb"
-    | Note.Bflat     -> "Bb"
     | Note.B         -> "B"
     | _ -> failwith "invalid note"
 

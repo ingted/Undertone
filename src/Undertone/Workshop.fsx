@@ -8,7 +8,7 @@
 #load "NAudioWaveStreamSource.fs"
 #load "Player.fs"
 #load "Player.net.fs"
-#load "Reader.fs"
+#load "IO.fs"
 open System.IO
 open Undertone
 open Undertone.Waves
@@ -69,7 +69,7 @@ Player.Play(c4')
 // apply a transformation to make the note "ring out",
 // which makes the notes sound more pleasant and helps
 // distinguish between notes
-let c4'' = Transformation.gaussianTapper 0.5 c4
+let c4'' = Transformation.gaussianTapper 0.4 c4
 
 // visual the note using F# Chart
 c4''
@@ -78,7 +78,7 @@ c4''
 |> FSharpChart.Line
 
 // now play the note
-Player.Play(c4')
+Player.Play(c4'')
 
 //////////////////////////////////////////////////////
 // Exercise 3 - playing a tune
@@ -108,7 +108,7 @@ Player.Play(c4')
 
 let makeNote time note = 
     Creation.makeNote Creation.sine time note 4
-    |> Transformation.gaussianTapper 0.5
+    |> Transformation.gaussianTapper 0.1
 
 let baaBaaBlackSheepChorus =
     seq { 
@@ -163,7 +163,9 @@ let baaBaaBlackSheep =
           yield! baaBaaBlackSheepChorus }
 
 // now play the note
-Player.Play(baaBaaBlackSheep)
+let player = Player.Play(baaBaaBlackSheep)
+// you may need this ...
+player.Stop()
 
 //////////////////////////////////////////////////////
 // Exercise 4 - playing a chord
@@ -185,7 +187,7 @@ cMajor
 |> FSharpChart.Line
 
 // now play the note
-Player.Play(c4')
+Player.Play(cMajor)
 
 //////////////////////////////////////////////////////
 // Exercise 5 - playing a real note
@@ -293,6 +295,10 @@ let baaBaaBlackSheep' =
       yield! baaBaaBlackSheepChorus' ]
 
 // play using the real note
-Player.Play(NoteSequencer.sequence makeRealNote baaBaaBlackSheep')
+let realPlayer = Player.Play(NoteSequencer.sequence makeRealNote baaBaaBlackSheep')
 // play using the syntherized note
-Player.Play(NoteSequencer.sequence makeNote' baaBaaBlackSheep')
+let synthPlayer = Player.Play(NoteSequencer.sequence makeNote' baaBaaBlackSheep')
+
+// you may need these ...
+realPlayer.Stop()
+synthPlayer.Stop()

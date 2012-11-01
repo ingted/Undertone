@@ -10,7 +10,7 @@
 #load "NAudioWaveStreamSource.fs"
 #load "Player.fs"
 #load "Player.net.fs"
-#load "reader.fs"
+#load "IO.fs"
 
 open System.IO
 open Undertone

@@ -44,8 +44,9 @@
     <Compile Include="NAudioWaveStreamSource.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="Player.net.fs" />
-    <Compile Include="Reader.fs" />
+    <Compile Include="IO.fs" />
     <Compile Include="Downloader.fs" />
+    <None Include="FSharpChart.fsx" />
     <None Include="LocalTests.fsx" />
     <None Include="DownloadsSamples.fsx" />
     <None Include="TranscodeSamples.fsx" />
