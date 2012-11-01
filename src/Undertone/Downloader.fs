@@ -1,4 +1,7 @@
-﻿module Undertone.Downloader
+﻿//////////////////////////////////////////////////////////////////////////////
+// Helper functions for downloading stuff
+//////////////////////////////////////////////////////////////////////////////
+module Undertone.Downloader
 open System.Collections.Generic
 open System
 open System.Net
@@ -36,7 +39,7 @@ type RequestGate(n:int) =
 // Gate the number of active web requests
 let webRequestGate = RequestGate(3)
 
-// Fetch the URL, and post the results to the urlCollector.
+// Fetch the URL asynchronously and then write it to a directory.
 let downloadFileAsync (sourceUrl:string) (destFile: string) =
     async { // Acquire an entry in the webRequestGate. Release
             // it when 'holder' goes out of scope
@@ -49,6 +52,7 @@ let downloadFileAsync (sourceUrl:string) (destFile: string) =
 
             do File.WriteAllBytes(destFile, response) }
 
+// download a list of urls and save them to the same directoy
 let downloadFileListAsync (ulrs: seq<string>) (targetDir: string) =
     let treatFile url =
         let filename = Path.GetFileName(url)

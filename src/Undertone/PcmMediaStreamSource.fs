@@ -1,4 +1,8 @@
-﻿namespace Undertone
+﻿//////////////////////////////////////////////////////////////////////////////
+// Turns our seq<float> into a .wav stream using stuff built into silverlight
+//////////////////////////////////////////////////////////////////////////////
+
+namespace Undertone
 
 // Ported from: http://www.charlespetzold.com/blog/2009/07/A-Simple-Silverlight-3-Synthesizer-with-Keyboard-of-Sorts.html
 // and: http://blogs.msdn.com/b/gillesk/archive/2009/03/23/playing-back-wave-files-in-silverlight.aspx

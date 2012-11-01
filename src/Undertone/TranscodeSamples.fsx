@@ -1,4 +1,9 @@
-﻿#r @"..\..\lib\NAudio\NAudio.dll"
+﻿//////////////////////////////////////////////////////////////////////////////
+// Scratch Pad for transcoding the format used by University of Iwoa samples
+// Please ignore! (as the coding style is a bit naff)
+//////////////////////////////////////////////////////////////////////////////
+
+#r @"..\..\lib\NAudio\NAudio.dll"
 #load "MiscConsts.fs"
 #load "Enums.fs"
 #load "WaveFunctions.fs"
@@ -16,6 +21,7 @@ let files = Directory.GetFiles(srcDir, "*.aiff")
 let silenceLength = MiscConsts.SampleRate / 10
 let silenceLimit = 0.05
 
+// truncateSilence does not work!!!!!
 let truncateSilence (values: seq<float>) =
     //printfn "%i" (Seq.length values)
     let findStartOfSilenceImpl (silenceIndex, index, result) value =
@@ -46,13 +52,13 @@ for file in files do
     let rootDir = Path.GetDirectoryName(Path.GetDirectoryName(file))
     let outFile = Path.Combine(rootDir, "wav", Path.ChangeExtension(Path.GetFileName(file), ".wav"))
     IO.read file 
-    |> Seq.map ((*) 100.) 
-    |> Seq.take MiscConsts.SampleRate
+    |> Seq.map ((*) 100.) // for some reason the piano samples are very quiet
+    |> Seq.take MiscConsts.SampleRate // grap a seconds worth of the sample
     |> IO.write (outFile)
 
-let files = Directory.GetFiles(srcDir, "*.wav")
+let wavFiles = Directory.GetFiles(srcDir, "*.wav")
 
 let scale =
-    seq { for file in files do yield! IO.read file }
+    seq { for file in wavFiles do yield! IO.read file }
 
 Player.Play scale

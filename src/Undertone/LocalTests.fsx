@@ -1,4 +1,9 @@
-﻿#r @"..\..\lib\NAudio\NAudio.dll"
+﻿//////////////////////////////////////////////////////////////////////////////
+// Scratch Pad for testing stuff out
+// Please ignore!
+//////////////////////////////////////////////////////////////////////////////
+
+#r @"..\..\lib\NAudio\NAudio.dll"
 #load "MiscConsts.fs"
 #load "Enums.fs"
 #load "WaveFunctions.fs"
@@ -70,8 +75,9 @@ let tune' =
 let player = Player.Play(tune, Repeat = true)
 player.Stop()
 player.Repeat <- false
-player.SetSampleSource(NotePlayer.play myNote tune') 
-let player' = Player.Play(NotePlayer.play myNote tune', Repeat = true)
+player.SetSampleSource(NoteSequencer.sequence myNote tune')
+player.Play() 
+let player' = Player.Play(NoteSequencer.sequence myNote tune', Repeat = true)
 
 let noteToPianoName note =
     match note with
@@ -102,7 +108,7 @@ let altMyNote note octave =
     let noteSource = @"C:\Users\Robert\Music\instruments\piano\wav"
     IO.read (Path.Combine(noteSource, sprintf "Piano.pp.%s%i.wav" (noteToPianoName note) octave))
 
-let player'' = Player.Play(NotePlayer.play altMyNote tune', Repeat = true)
+let player'' = Player.Play(NoteSequencer.sequence altMyNote tune', Repeat = true)
 
 // stop the tune, make refinements then play again
 player.Stop()

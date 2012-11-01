@@ -180,7 +180,11 @@ module Transformation =
                                 (gaussian 1. 0. startLength (step * (len - float i))) * 
                                 (gaussian 1. 0. endLength (step * float i)))
 
-module NotePlayer =
+/// Functions to turn a list of chords into a playable sound wave
+module NoteSequencer =
+    type Chord = seq<Note*int>
+
+    /// version of Seq.take that doesn't though exceptions if you reach the end of the sequence
     let private safeTake wanted (source : seq<'T>) = 
         (* Note: don't create or dispose any IEnumerable if n = 0 *)
         if wanted = 0 then Seq.empty else  
@@ -190,7 +194,9 @@ module NotePlayer =
                 incr count
                 yield e.Current }
 
-    let play (noteTable: Note -> int -> seq<float>) (notes: seq<#seq<Note*int>*int>) =
+    // function that does a function the describes how a note should be played and list of chords
+    // and generates a sound wave from them
+    let sequence (noteTable: Note -> int -> seq<float>) (notes: seq<#Chord*int>) =
         seq { for cordNotes, length in notes do
                 let notes = cordNotes |> Seq.map (fun (note, octave) -> noteTable note octave)
                 yield! Creation.combine notes |> safeTake length }
