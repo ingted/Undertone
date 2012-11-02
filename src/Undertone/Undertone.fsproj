@@ -40,10 +40,11 @@
     <Compile Include="NAudioWaveStreamSource.fs" />
     <Compile Include="Player.fs" />
     <Compile Include="Player.net.fs" />
-    <Compile Include="Reader.fs" />
+    <Compile Include="IO.fs" />
     <None Include="LocalTests.fsx" />
-    <None Include="satisfaction.fsx" />
-    <None Include="testread.fsx" />
+    <None Include="DownloadsSamples.fsx" />
+    <None Include="TranscodeSamples.fsx" />
+    <None Include="Workshop.fsx" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="mscorlib" />
