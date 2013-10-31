@@ -69,7 +69,7 @@ Player.Play(c4')
 // apply a transformation to make the note "ring out",
 // which makes the notes sound more pleasant and helps
 // distinguish between notes
-let c4'' = Transformation.gaussianTapper 0.4 c4
+let c4'' = Transformation.tapper 8. 0.1 c4
 
 // visual the note using F# Chart
 c4''
