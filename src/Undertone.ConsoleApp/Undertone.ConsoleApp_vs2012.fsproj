@@ -186,13 +186,6 @@
     <Reference Include="System.Xml" />
     <Reference Include="System.Windows.Browser" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Undertone\Undertone.Silverlight.fsproj">
-      <Name>Undertone.Silverlight</Name>
-      <Project>{d68f2d1d-be9b-41fa-8443-80209dbf058f}</Project>
-      <Private>True</Private>
-    </ProjectReference>
-  </ItemGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
 	     Other similar extension points exist, see Microsoft.Common.targets.
 	<Target Name="BeforeBuild">

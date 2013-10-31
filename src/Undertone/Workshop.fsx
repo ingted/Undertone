@@ -194,7 +194,7 @@ Player.Play(cMajor)
 //////////////////////////////////////////////////////
 
 // adapt this to where your notes are stored
-let noteSource = @"C:\Users\Robert\Music\instruments\piano\wav"
+let noteSource = @"C:\Users\robert_2\Copy\Documents\UndertoneTutorial\soundsamples"
 
 // load a note
 let c4Real = IO.read (Path.Combine(noteSource, "Piano.pp.C4.wav"))
